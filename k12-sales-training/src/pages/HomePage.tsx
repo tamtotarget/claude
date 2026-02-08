@@ -1,23 +1,27 @@
 import { Link } from 'react-router-dom';
+import { useAuthStore } from '../stores/authStore';
 import { useProgressStore } from '../stores/progressStore';
 import { modules } from '../content/modules';
+import type { Role } from '../types';
 
 export default function HomePage() {
-  const { progress, getModuleProgress } = useProgressStore();
-  const filteredModules = modules.filter((m) => m.roles.includes(progress.role));
+  const { profile } = useAuthStore();
+  const { modules: progressModules, getModuleProgress } = useProgressStore();
+  const role = (profile?.role || 'SDR') as Role;
+  const filteredModules = modules.filter((m) => m.roles.includes(role));
 
   return (
     <div>
       {/* Welcome header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Welcome to K-12 Sales Training
+          Welcome back, {profile?.full_name?.split(' ')[0] || 'there'}!
         </h1>
         <p className="text-lg text-gray-600">
           Build expertise in selling to the education market. Select a module below to get started.
         </p>
         <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium">
-          Learning as: {progress.role}
+          Learning as: {role}
         </div>
       </div>
 
@@ -70,13 +74,13 @@ export default function HomePage() {
       <div className="mt-8 grid grid-cols-3 gap-4">
         <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
           <div className="text-2xl font-bold text-primary">
-            {Object.values(progress.modules).filter((m) => m.completed).length}
+            {Object.values(progressModules).filter((m) => m.completed).length}
           </div>
           <div className="text-xs text-gray-500 mt-1">Modules Completed</div>
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
           <div className="text-2xl font-bold text-secondary">
-            {Object.values(progress.modules).filter((m) => m.quizCompleted).length}
+            {Object.values(progressModules).filter((m) => m.quizCompleted).length}
           </div>
           <div className="text-xs text-gray-500 mt-1">Quizzes Passed</div>
         </div>

@@ -1,18 +1,22 @@
 import { Link } from 'react-router-dom';
+import { useAuthStore } from '../stores/authStore';
 import { useProgressStore } from '../stores/progressStore';
 import { modules } from '../content/modules';
+import type { Role } from '../types';
 
 export default function DashboardPage() {
-  const { progress, getModuleProgress, getOverallProgress, resetProgress } = useProgressStore();
+  const { profile } = useAuthStore();
+  const { modules: progressModules, getModuleProgress, getOverallProgress } = useProgressStore();
   const overallProgress = getOverallProgress();
-  const filteredModules = modules.filter((m) => m.roles.includes(progress.role));
+  const role = (profile?.role || 'SDR') as Role;
+  const filteredModules = modules.filter((m) => m.roles.includes(role));
 
-  const completedModules = Object.values(progress.modules).filter((m) => m.completed).length;
-  const completedQuizzes = Object.values(progress.modules).filter((m) => m.quizCompleted).length;
+  const completedModules = Object.values(progressModules).filter((m) => m.completed).length;
+  const completedQuizzes = Object.values(progressModules).filter((m) => m.quizCompleted).length;
   const avgScore =
     completedQuizzes > 0
       ? Math.round(
-          Object.values(progress.modules)
+          Object.values(progressModules)
             .filter((m) => m.quizCompleted && m.quizScore !== null)
             .reduce((acc, m) => acc + (m.quizScore || 0), 0) / completedQuizzes
         )
@@ -21,7 +25,7 @@ export default function DashboardPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Progress Dashboard</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">My Progress</h1>
         <p className="text-gray-600">
           Track your learning journey across all modules.
         </p>
@@ -110,20 +114,6 @@ export default function DashboardPage() {
             );
           })}
         </div>
-      </div>
-
-      {/* Reset button */}
-      <div className="mt-8 text-center">
-        <button
-          onClick={() => {
-            if (window.confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
-              resetProgress();
-            }
-          }}
-          className="px-4 py-2 text-sm text-gray-400 hover:text-danger transition-colors cursor-pointer bg-transparent border-0"
-        >
-          Reset All Progress
-        </button>
       </div>
     </div>
   );

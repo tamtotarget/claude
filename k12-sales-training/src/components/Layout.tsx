@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuthStore } from '../stores/authStore';
 import { useProgressStore } from '../stores/progressStore';
 import { modules } from '../content/modules';
 import type { Role } from '../types';
 
-const roles: Role[] = ['SDR', 'GTM Engineer', 'SDR Manager', 'CSM'];
-
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
-  const { progress, setRole, getOverallProgress, getModuleProgress } = useProgressStore();
+  const { profile, signOut } = useAuthStore();
+  const { getOverallProgress, getModuleProgress } = useProgressStore();
   const overallProgress = getOverallProgress();
 
-  const filteredModules = modules.filter((m) => m.roles.includes(progress.role));
+  const role = (profile?.role || 'SDR') as Role;
+  const filteredModules = modules.filter((m) => m.roles.includes(role));
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
@@ -49,22 +50,22 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </Link>
         </div>
 
-        {/* Role selector */}
+        {/* User info */}
         <div className="p-4 border-b border-gray-200">
-          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
-            Your Role
-          </label>
-          <select
-            value={progress.role}
-            onChange={(e) => setRole(e.target.value as Role)}
-            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-light focus:border-transparent"
-          >
-            {roles.map((role) => (
-              <option key={role} value={role}>
-                {role}
-              </option>
-            ))}
-          </select>
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-xs shrink-0">
+              {profile?.full_name
+                ?.split(' ')
+                .map((n) => n[0])
+                .join('')
+                .toUpperCase()
+                .slice(0, 2) || '?'}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-medium text-gray-900 truncate">{profile?.full_name}</div>
+              <div className="text-xs text-gray-500">{role}</div>
+            </div>
+          </div>
         </div>
 
         {/* Progress bar */}
@@ -112,8 +113,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
-        {/* Dashboard link */}
-        <div className="p-4 border-t border-gray-200">
+        {/* Bottom nav */}
+        <div className="p-4 border-t border-gray-200 space-y-1">
           <Link
             to="/dashboard"
             onClick={() => setSidebarOpen(false)}
@@ -126,8 +127,36 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
-            Progress Dashboard
+            My Progress
           </Link>
+
+          {/* Team Dashboard - managers only */}
+          {profile?.is_manager && (
+            <Link
+              to="/team"
+              onClick={() => setSidebarOpen(false)}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium no-underline transition-colors ${
+                location.pathname === '/team'
+                  ? 'bg-primary text-white'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              My Team
+            </Link>
+          )}
+
+          <button
+            onClick={() => signOut()}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-500 hover:bg-gray-100 transition-colors cursor-pointer bg-transparent border-0 text-left"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            Sign Out
+          </button>
         </div>
       </aside>
 

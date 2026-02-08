@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../stores/authStore';
 import { useProgressStore } from '../stores/progressStore';
 import { modules } from '../content/modules';
 
 export default function QuizPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user } = useAuthStore();
   const { saveQuizScore, markModuleCompleted } = useProgressStore();
 
   const moduleId = Number(id);
@@ -48,8 +50,10 @@ export default function QuizPage() {
         return acc + (selectedAnswers[idx] === q.correctAnswer ? 1 : 0);
       }, 0);
       const score = Math.round((correctCount / totalQuestions) * 100);
-      saveQuizScore(moduleId, score);
-      markModuleCompleted(moduleId);
+      if (user) {
+        saveQuizScore(user.id, moduleId, score);
+        markModuleCompleted(user.id, moduleId);
+      }
       setShowResult(true);
     } else {
       setCurrentQuestion((prev) => prev + 1);

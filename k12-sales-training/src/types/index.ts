@@ -35,3 +35,20 @@ export interface UserProgress {
   role: Role;
   modules: Record<number, ModuleProgress>;
 }
+
+export interface Profile {
+  id: string;
+  email: string;
+  full_name: string;
+  avatar_url: string | null;
+  role: Role | '';
+  is_manager: boolean;
+  manager_id: string | null;
+  onboarded: boolean;
+  created_at: string;
+}
+
+export interface TeamMember {
+  profile: Profile;
+  progress: ModuleProgress[];
+}

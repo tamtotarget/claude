@@ -1,5 +1,6 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useAuthStore } from '../stores/authStore';
 import { useProgressStore } from '../stores/progressStore';
 import { modules } from '../content/modules';
 import MarkdownRenderer from '../components/MarkdownRenderer';
@@ -7,6 +8,7 @@ import MarkdownRenderer from '../components/MarkdownRenderer';
 export default function ModulePage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user } = useAuthStore();
   const { markModuleCompleted, updateLastAccessed, getModuleProgress } = useProgressStore();
 
   const moduleId = Number(id);
@@ -14,10 +16,10 @@ export default function ModulePage() {
   const modProgress = getModuleProgress(moduleId);
 
   useEffect(() => {
-    if (mod) {
-      updateLastAccessed(mod.id);
+    if (mod && user) {
+      updateLastAccessed(user.id, mod.id);
     }
-  }, [mod, updateLastAccessed]);
+  }, [mod, user, updateLastAccessed]);
 
   if (!mod) {
     return (
@@ -35,7 +37,9 @@ export default function ModulePage() {
   const nextModule = modules.find((m) => m.id === moduleId + 1);
 
   const handleMarkComplete = () => {
-    markModuleCompleted(mod.id);
+    if (user) {
+      markModuleCompleted(user.id, mod.id);
+    }
   };
 
   return (
