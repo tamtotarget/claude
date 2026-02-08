@@ -10,6 +10,7 @@ import ModulePage from './pages/ModulePage';
 import QuizPage from './pages/QuizPage';
 import DashboardPage from './pages/DashboardPage';
 import TeamDashboardPage from './pages/TeamDashboardPage';
+import AdminDashboardPage from './pages/AdminDashboardPage';
 
 function AppContent() {
   const { session, profile, loading, initialized, initialize } = useAuthStore();
@@ -56,6 +57,9 @@ function AppContent() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/team" element={
           profile?.is_manager ? <TeamDashboardPage /> : <Navigate to="/" />
+        } />
+        <Route path="/admin" element={
+          profile?.is_admin ? <AdminDashboardPage /> : <Navigate to="/" />
         } />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

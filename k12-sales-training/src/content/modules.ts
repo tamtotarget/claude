@@ -6,7 +6,7 @@ export const modules: Module[] = [
     title: 'K-12 Market Fundamentals',
     description: 'Understand the K-12 education landscape, key stakeholders, and buying cycles.',
     icon: '🏫',
-    roles: ['SDR', 'GTM Engineer', 'SDR Manager', 'CSM'],
+    roles: ['SDR', 'GTM Engineer', 'SDR Manager', 'CSM', 'Other'],
     content: `
 # Module 1: K-12 Market Fundamentals
 
@@ -182,7 +182,7 @@ The K-12 market rewards patience, relationships, and deep understanding of the e
     title: 'Prospecting & Outreach',
     description: 'Master effective outreach strategies tailored to education buyers.',
     icon: '📞',
-    roles: ['SDR', 'GTM Engineer', 'SDR Manager'],
+    roles: ['SDR', 'GTM Engineer', 'SDR Manager', 'Other'],
     content: `
 # Module 2: Prospecting & Outreach Strategies
 
@@ -203,7 +203,7 @@ This module content is under development. Check back soon for detailed prospecti
     title: 'Discovery & Qualification',
     description: 'Learn frameworks for qualifying K-12 opportunities effectively.',
     icon: '🔍',
-    roles: ['SDR', 'GTM Engineer', 'SDR Manager', 'CSM'],
+    roles: ['SDR', 'GTM Engineer', 'SDR Manager', 'CSM', 'Other'],
     content: `
 # Module 3: Discovery & Qualification
 
@@ -224,7 +224,7 @@ This module content is under development.
     title: 'Demos & Presentations',
     description: 'Deliver compelling demos that resonate with education stakeholders.',
     icon: '🎯',
-    roles: ['SDR', 'GTM Engineer', 'CSM'],
+    roles: ['SDR', 'GTM Engineer', 'CSM', 'Other'],
     content: `
 # Module 4: Demos & Presentations
 
@@ -245,7 +245,7 @@ This module content is under development.
     title: 'Navigating Procurement',
     description: 'Understand RFPs, board approvals, and procurement processes.',
     icon: '📋',
-    roles: ['SDR', 'GTM Engineer', 'SDR Manager'],
+    roles: ['SDR', 'GTM Engineer', 'SDR Manager', 'Other'],
     content: `
 # Module 5: Navigating Procurement
 
@@ -266,7 +266,7 @@ This module content is under development.
     title: 'Customer Success & Expansion',
     description: 'Drive adoption, renewals, and expansion in school districts.',
     icon: '🚀',
-    roles: ['CSM', 'SDR Manager'],
+    roles: ['CSM', 'SDR Manager', 'Other'],
     content: `
 # Module 6: Customer Success & Expansion
 

@@ -8,6 +8,7 @@ const roles: { value: Role; label: string; description: string }[] = [
   { value: 'GTM Engineer', label: 'GTM Engineer', description: 'Go-to-Market Engineer — technical sales support and demos' },
   { value: 'SDR Manager', label: 'SDR Manager', description: 'SDR Manager — leading and coaching the SDR team' },
   { value: 'CSM', label: 'CSM', description: 'Customer Success Manager — onboarding, retention, and expansion' },
+  { value: 'Other', label: 'Other', description: 'Other team member — access all training modules' },
 ];
 
 export default function OnboardingPage() {

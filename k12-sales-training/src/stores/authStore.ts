@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
+import { ADMIN_EMAILS } from '../lib/constants';
 import type { Profile } from '../types';
 import type { Session, User } from '@supabase/supabase-js';
 
@@ -78,8 +79,20 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       return null;
     }
 
-    set({ profile: data as Profile });
-    return data as Profile;
+    const profile = data as Profile;
+
+    // Auto-promote admins by email if not already flagged
+    const shouldBeAdmin = ADMIN_EMAILS.includes(profile.email.toLowerCase());
+    if (shouldBeAdmin && !profile.is_admin) {
+      await supabase
+        .from('profiles')
+        .update({ is_admin: true, updated_at: new Date().toISOString() })
+        .eq('id', user.id);
+      profile.is_admin = true;
+    }
+
+    set({ profile });
+    return profile;
   },
 
   updateProfile: async (updates: Partial<Profile>) => {

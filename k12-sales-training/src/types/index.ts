@@ -1,4 +1,4 @@
-export type Role = 'SDR' | 'GTM Engineer' | 'SDR Manager' | 'CSM';
+export type Role = 'SDR' | 'GTM Engineer' | 'SDR Manager' | 'CSM' | 'Other';
 
 export interface Module {
   id: number;
@@ -43,6 +43,7 @@ export interface Profile {
   avatar_url: string | null;
   role: Role | '';
   is_manager: boolean;
+  is_admin: boolean;
   manager_id: string | null;
   onboarded: boolean;
   created_at: string;
