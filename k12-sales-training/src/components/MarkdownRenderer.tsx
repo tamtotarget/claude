@@ -10,6 +10,7 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
     <div className="prose max-w-none">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
+        children={content}
         components={{
           h1: ({ children }) => (
             <h1 className="text-3xl font-bold text-gray-900 mb-6 pb-3 border-b border-gray-200">
